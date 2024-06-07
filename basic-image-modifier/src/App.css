@@ -1,0 +1,105 @@
+:root {
+    --radius: 17px;
+    --highlightColor: #ebbc23;
+    --contrastColor: #140b0a;
+    --blue: #366aad;
+}
+
+.form-imageInput {
+    text-align: center;
+}
+
+.form-imageInput label {
+    display: inline-grid;
+    place-content: center;
+    border: 2px solid #f7f7f7;
+    border-radius: var(--radius);
+    padding: 7px 12px;
+    font-size: 1.35em;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+main {
+    min-width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+main button {
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.utilitiesContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background-color: var(--blue);
+    border-radius: 4px;
+    padding: 5px;
+}
+
+.mainControls {
+    max-height: 40px;
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    place-content: center;
+}
+
+.mainControls>* {
+    max-height: inherit;
+}
+
+.utility-rotate,
+.utility-scale,
+.utility-invert {
+    &>* {
+        height: 100%;
+    }
+}
+
+.utility-scale,
+.utility-scale>* {
+    display: grid;
+    place-content: center;
+    align-items: center;
+}
+
+.utility-scale {
+    grid-template-columns: auto auto;
+}
+
+.utility-scale>input {
+    cursor: pointer;
+}
+
+.utility-scale span,
+.utility-scale span>svg {
+    width: 20px;
+}
+
+.restoreActions {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: space-evenly;
+}
+
+.restoreActions button {
+    max-height: 25px;
+    width: 80px;
+}
+
+.restoreActions button>svg {
+    max-height: inherit;
+}
+
+.saveBtn {
+    height: 40px;
+    background-color: var(--highlightColor);
+    color: var(--contrastColor);
+    border-radius: var(--radius);
+    font-size: 1.3em;
+}
