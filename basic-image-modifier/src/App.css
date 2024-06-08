@@ -1,7 +1,7 @@
 :root {
-    --radius: 17px;
-    --highlightColor: #ebbc23;
-    --contrastColor: #140b0a;
+    --radius: 6px;
+    --highlightColor: #9980FA;
+    --contrastColor: #f5f6fa;
     --blue: #366aad;
 }
 
@@ -24,33 +24,46 @@ main {
     min-width: 320px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 10px;
 }
 
 main button {
-    border: none;
+    display: grid;
+    align-items: center;
+    border: 1px solid #dcdde1;
     outline: none;
+    border-radius: var(--radius);
+    background-color: transparent;
+    color: #dcdde1;
+    padding: 5px;
     cursor: pointer;
+}
+
+main button>svg {
+    width: 100%;
+    height: 100%;
 }
 
 .utilitiesContainer {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    background-color: var(--blue);
+    gap: 8px;
     border-radius: 4px;
-    padding: 5px;
+}
+
+.utilitiesContainer>* {
+    max-height: 35px;
 }
 
 .mainControls {
-    max-height: 40px;
     display: grid;
     grid-template-columns: repeat(3, auto);
     place-content: center;
+    gap: 12px;
 }
 
 .mainControls>* {
-    max-height: inherit;
+    height: 35px;
 }
 
 .utility-rotate,
@@ -59,6 +72,16 @@ main button {
     &>* {
         height: 100%;
     }
+}
+
+.utility-rotate {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.utility-rotate>* {
+    aspect-ratio: 1;
 }
 
 .utility-scale,
@@ -78,7 +101,7 @@ main button {
 
 .utility-scale span,
 .utility-scale span>svg {
-    width: 20px;
+    width: 25px;
 }
 
 .restoreActions {
@@ -88,7 +111,7 @@ main button {
 }
 
 .restoreActions button {
-    max-height: 25px;
+    max-height: inherit;
     width: 80px;
 }
 
@@ -100,6 +123,7 @@ main button {
     height: 40px;
     background-color: var(--highlightColor);
     color: var(--contrastColor);
+    border: none;
     border-radius: var(--radius);
     font-size: 1.3em;
 }
