@@ -1,7 +1,6 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './App.css'
 import {
-  ScaleIcon,
   UndoIcon,
   RedoIcon,
   RotateRightIcon,
@@ -14,7 +13,8 @@ import { useControls } from './hooks/useControls.js'
 function App () {
   const { image, errorMessage, handleSubmit } = useImage()
   const canvas = useRef()
-  const { scale, updateScale, setOriginalDimensions } = useControls(canvas.current)
+  const [imgElement, setImgElement] = useState(null)
+  const { setOriginalDimensions, invertImage } = useControls({ canvas: canvas.current, imageFile: image, imgElement })
 
   const handleUploadImage = (e) => {
     e.target.closest('form').requestSubmit()
@@ -23,6 +23,7 @@ function App () {
   useEffect(() => {
     const onLoadCanvas = (e) => {
       const imgElement = e.detail
+      setImgElement(imgElement)
       const { height, width } = imgElement
 
       setOriginalDimensions({ height, width })
@@ -48,11 +49,10 @@ function App () {
       {image
         ? (
         <main>
-          <div className="canvasContainer" style={{ position: 'relative' }}>
+          <div className="canvasContainer">
             <canvas ref={canvas} />
-            <span style={{ position: 'absolute', bottom: 0, fontSize: '0.9em', fontWeight: 'lighter' }}>x{scale}</span>
           </div>
-          <div className='actionContainer'>
+
           <section className="utilitiesContainer">
             <header className="mainControls">
               <article className="utility-rotate">
@@ -63,23 +63,11 @@ function App () {
                   <RotateRightIcon />
                 </button>
               </article>
-              <article className="utility-scale" title="Escalar imagen">
-                <span>
-                  <ScaleIcon />
-                </span>
-                <input
-                type="range"
-                min="0.25"
-                max="2.5"
-                step="0.05"
-                onChange={updateScale}
-                value={scale}
-                />
-              </article>
               <article className="utility-invert">
-                <button title="Invertir imagen">Invertir</button>
+                <button title="Invertir imagen" onClick={invertImage}>Invertir</button>
               </article>
             </header>
+
             <div className="restoreActions">
               <button title="Deshacer">
                 <UndoIcon />
@@ -89,10 +77,10 @@ function App () {
               </button>
             </div>
           </section>
+
           <button className="saveBtn" title="Guardar imagen">
             Guardar
           </button>
-          </div>
         </main>
           )
         : (

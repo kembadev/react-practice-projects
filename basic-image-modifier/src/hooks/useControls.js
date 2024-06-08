@@ -1,20 +1,24 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
-export function useControls (canvas) {
-  const [scale, setScale] = useState(1)
+export function useControls ({ canvas, imageFile, imgElement }) {
   const [originalDimensions, setOriginalDimensions] = useState({ height: 0, width: 0 })
 
-  const updateScale = (e) => {
-    setScale(e.target.value)
+  const updateCanvas = async (action) => {
+    const ctx = canvas.getContext('2d')
+    action(ctx)
   }
 
-  useEffect(() => {
-    if (!canvas) return
+  const invertImage = () => {
+    updateCanvas((ctx) => {
+      // (x, y) => (a*x + c*y + e, b*x + d*y + f)
+      // a*x + c*y + e = canvas_width - x /=> to invert horizontally
+      // -1*x + 0*y + canvas_width = canvas_width - x
+      ctx.transform(-1, 0, 0, 1, canvas.width, 0) // horizontal invertion
+      // ctx.transform(1, 0, 0, -1, 0, canvas.height) for vertical invertion
 
-    const { height, width } = originalDimensions
-    canvas.height = height * scale
-    canvas.width = width * scale
-  }, [scale])
+      ctx.drawImage(imgElement, 0, 0)
+    })
+  }
 
-  return { scale, updateScale, setOriginalDimensions }
+  return { setOriginalDimensions, invertImage }
 }

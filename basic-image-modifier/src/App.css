@@ -25,21 +25,10 @@
 }
 
 main {
-    min-height: 100vh;
-    box-sizing: border-box;
-    padding: 20px;
-}
-
-main,
-.actionContainer {
     min-width: 320px;
     display: flex;
     flex-direction: column;
     gap: 10px;
-}
-
-main>*:first-child {
-    flex: 1;
 }
 
 main button {
@@ -88,7 +77,6 @@ main button>svg {
 }
 
 .utility-rotate,
-.utility-scale,
 .utility-invert {
     &>* {
         height: 100%;
@@ -103,26 +91,6 @@ main button>svg {
 
 .utility-rotate>* {
     aspect-ratio: 1;
-}
-
-.utility-scale,
-.utility-scale>* {
-    display: grid;
-    place-content: center;
-    align-items: center;
-}
-
-.utility-scale {
-    grid-template-columns: auto auto;
-}
-
-.utility-scale>input {
-    cursor: pointer;
-}
-
-.utility-scale span,
-.utility-scale span>svg {
-    width: 25px;
 }
 
 .restoreActions {
