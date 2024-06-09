@@ -14,17 +14,24 @@ function App () {
   const { image, errorMessage, handleSubmit } = useImage()
   const canvas = useRef()
   const [imgElement, setImgElement] = useState(null)
-  const { setOriginalDimensions, invertImage } = useControls({ canvas: canvas.current, imageFile: image, imgElement })
+  const {
+    setOriginalDimensions,
+    invertImage,
+    rotateToLeft,
+    rotateToRight
+  } = useControls({ canvas: canvas.current, imageFile: image, imgElement })
 
   const handleUploadImage = (e) => {
     e.target.closest('form').requestSubmit()
   }
 
+  console.log('app render')
+
   useEffect(() => {
     const onLoadCanvas = (e) => {
-      const imgElement = e.detail
-      setImgElement(imgElement)
-      const { height, width } = imgElement
+      const loadedImgElement = e.detail
+      setImgElement(loadedImgElement)
+      const { height, width } = loadedImgElement
 
       setOriginalDimensions({ height, width })
 
@@ -34,7 +41,7 @@ function App () {
       canvasElement.height = height
       canvasElement.width = width
 
-      ctx.drawImage(imgElement, 0, 0)
+      ctx.drawImage(loadedImgElement, 0, 0)
     }
 
     window.addEventListener(EVENTS.IMAGE_LOAD, onLoadCanvas)
@@ -42,7 +49,7 @@ function App () {
     return () => {
       window.removeEventListener(EVENTS.IMAGE_LOAD, onLoadCanvas)
     }
-  }, [image])
+  }, [setOriginalDimensions, imgElement])
 
   return (
     <>
@@ -56,10 +63,10 @@ function App () {
           <section className="utilitiesContainer">
             <header className="mainControls">
               <article className="utility-rotate">
-                <button title="Rotar a la izquierda">
+                <button title="Rotar a la izquierda" onClick={rotateToLeft}>
                   <RotateLeftIcon />
                 </button>
-                <button title="Rotar a la derecha">
+                <button title="Rotar a la derecha" onClick={rotateToRight}>
                   <RotateRightIcon />
                 </button>
               </article>
