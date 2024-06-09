@@ -14,18 +14,17 @@ function App () {
   const { image, errorMessage, handleSubmit } = useImage()
   const canvas = useRef()
   const [imgElement, setImgElement] = useState(null)
+  const [ctx, setCtx] = useState(null)
   const {
     setOriginalDimensions,
     invertImage,
     rotateToLeft,
     rotateToRight
-  } = useControls({ canvas: canvas.current, imageFile: image, imgElement })
+  } = useControls({ canvas: canvas.current, ctx, imageFile: image, imgElement })
 
   const handleUploadImage = (e) => {
     e.target.closest('form').requestSubmit()
   }
-
-  console.log('app render')
 
   useEffect(() => {
     const onLoadCanvas = (e) => {
@@ -36,12 +35,13 @@ function App () {
       setOriginalDimensions({ height, width })
 
       const canvasElement = canvas.current
-      const ctx = canvasElement.getContext('2d')
+      const context = canvasElement.getContext('2d', { willReadFrequently: true })
+      setCtx(context)
 
       canvasElement.height = height
       canvasElement.width = width
 
-      ctx.drawImage(loadedImgElement, 0, 0)
+      context.drawImage(loadedImgElement, 0, 0)
     }
 
     window.addEventListener(EVENTS.IMAGE_LOAD, onLoadCanvas)

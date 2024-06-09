@@ -3,11 +3,10 @@ import { setRotation } from '../methods/rotate.js'
 import { setInvertion } from '../methods/invert.js'
 import { DIRECTION } from '../consts.js'
 
-export function useControls ({ canvas, imageFile, imgElement }) {
+export function useControls ({ canvas, ctx, imageFile, imgElement }) {
   const [originalDimensions, setOriginalDimensions] = useState({ height: 0, width: 0 })
 
   const updateCanvas = (action) => {
-    const ctx = canvas.getContext('2d')
     action(ctx)
   }
 
