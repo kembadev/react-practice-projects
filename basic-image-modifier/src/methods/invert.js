@@ -1,10 +1,10 @@
-import { getImageBytesFromContext } from './imageBytes'
+import { getImageBytesFromContext } from './imageBytes.js'
 
-async function getImageBytesXAxisInverted ({ imageBytes, width, height }) {
+async function getImageBytesXAxisInverted ({ imageBytes, canvasWidth, canvasHeight }) {
   const imageBytesMatrix = []
-  for (let i = 0; i < imageBytes.length; i += (width * 4)) {
+  for (let i = 0; i < imageBytes.length; i += (canvasWidth * 4)) {
     const rowOfValues = []
-    for (let x = 0; x < (width * 4); x++) {
+    for (let x = 0; x < (canvasWidth * 4); x++) {
       rowOfValues.push(imageBytes[x + i])
     }
 
@@ -13,10 +13,10 @@ async function getImageBytesXAxisInverted ({ imageBytes, width, height }) {
 
   const newImageBytes = []
 
-  for (let y = 0; y < height; y++) {
+  for (let y = 0; y < canvasHeight; y++) {
     const reversedPixelsRow = []
 
-    for (let x = 0; x < (width * 4); x += 4) {
+    for (let x = 0; x < (canvasWidth * 4); x += 4) {
       const pixel = []
       let valuePosition = 0
       while (valuePosition < 4) {
@@ -33,11 +33,11 @@ async function getImageBytesXAxisInverted ({ imageBytes, width, height }) {
   return new Uint8Array(newImageBytes.flat())
 }
 
-export function setInvertion ({ ctx, width, height }) {
-  getImageBytesFromContext({ ctx, width, height })
-    .then(imageBytes => getImageBytesXAxisInverted({ imageBytes, width, height }))
+export function setInvertion ({ ctx, canvasWidth, canvasHeight }) {
+  getImageBytesFromContext({ ctx, canvasWidth, canvasHeight })
+    .then(imageBytes => getImageBytesXAxisInverted({ imageBytes, canvasWidth, canvasHeight }))
     .then(invertedImageBytes => {
-      const canvasImageData = ctx.createImageData(width, height)
+      const canvasImageData = ctx.createImageData(canvasWidth, canvasHeight)
       canvasImageData.data.set(invertedImageBytes)
       ctx.putImageData(canvasImageData, 0, 0)
     })

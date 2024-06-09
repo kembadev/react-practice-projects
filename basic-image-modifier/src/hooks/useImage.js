@@ -14,9 +14,9 @@ export function useImage () {
     let file
 
     if (fileType === undefined) {
-      file = Result.Failed({ error: 'File not founded' })
+      file = Result.Failed({ error: 'Archivo no encontrado' })
     } else if (fileType !== 'image') {
-      file = Result.Failed({ value: imageFile, error: `File must be of type image. Recibido: ${imageFile.type}` })
+      file = Result.Failed({ value: imageFile, error: `El archivo debe ser de tipo imagen. Recibido: ${imageFile.type}` })
     }
 
     if (fileType === 'image') {

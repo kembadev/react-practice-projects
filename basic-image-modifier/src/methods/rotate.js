@@ -1,11 +1,11 @@
 import { getImageBytesFromContext } from './imageBytes.js'
-import { DIRECTION } from '../consts.js'
+import { DIRECTION, ORIENTATION_TYPE } from '../consts.js'
 
-async function getRotatedImageBytes ({ imageBytes, width, height, direction }) {
+async function getRotatedImageBytes ({ imageBytes, canvasWidth, canvasHeight, direction }) {
   const imageBytesMatrix = []
   // each pixel is represented by four values within the imageBytes array
-  for (let y = 0; y < imageBytes.length; y += (width * 4)) {
-    const rowOfValues = [...imageBytes.slice(y, y + width * 4)]
+  for (let y = 0; y < imageBytes.length; y += (canvasWidth * 4)) {
+    const rowOfValues = [...imageBytes.slice(y, y + canvasWidth * 4)]
 
     const rowOfPixels = []
     for (let x = 0; x < rowOfValues.length; x += 4) {
@@ -17,9 +17,9 @@ async function getRotatedImageBytes ({ imageBytes, width, height, direction }) {
 
   const rotatedImageBytesMatrix = []
   if (direction === DIRECTION.LEFT) {
-    for (let pixelIndex = width - 1; pixelIndex >= 0; pixelIndex--) {
+    for (let pixelIndex = canvasWidth - 1; pixelIndex >= 0; pixelIndex--) {
       const newRowOfPixels = []
-      for (let rowIndex = 0; rowIndex < height; rowIndex++) {
+      for (let rowIndex = 0; rowIndex < canvasHeight; rowIndex++) {
         // take off the nth pixel of each row and get it into newRowOfPixels
         newRowOfPixels.push(imageBytesMatrix[rowIndex][pixelIndex])
       }
@@ -27,9 +27,9 @@ async function getRotatedImageBytes ({ imageBytes, width, height, direction }) {
       rotatedImageBytesMatrix.push(newRowOfPixels)
     }
   } else {
-    for (let pixelIndex = 0; pixelIndex < width; pixelIndex++) {
+    for (let pixelIndex = 0; pixelIndex < canvasWidth; pixelIndex++) {
       const newRowOfPixels = []
-      for (let rowIndex = height - 1; rowIndex >= 0; rowIndex--) {
+      for (let rowIndex = canvasHeight - 1; rowIndex >= 0; rowIndex--) {
         newRowOfPixels.push(imageBytesMatrix[rowIndex][pixelIndex])
       }
 
@@ -40,11 +40,26 @@ async function getRotatedImageBytes ({ imageBytes, width, height, direction }) {
   return new Uint8Array(rotatedImageBytesMatrix.flat(2))
 }
 
-export function setRotation ({ ctx, width, height, direction }) {
-  getImageBytesFromContext({ ctx, width, height })
-    .then(imageBytes => getRotatedImageBytes({ imageBytes, width, height, direction }))
+export function setRotation ({ canvas, ctx, originalWidth, originalHeight, direction, orientationType }) {
+  getImageBytesFromContext({ ctx, canvasWidth: canvas.width, canvasHeight: canvas.height })
+    .then(imageBytes => getRotatedImageBytes({
+      imageBytes,
+      canvasWidth: canvas.width,
+      canvasHeight: canvas.height,
+      direction
+    }))
     .then(rotatedImageBytes => {
-      const canvasImageData = ctx.createImageData(width, height)
+      // toggle canvas's dimensions due to rotation
+      let canvasImageData
+      if (orientationType === ORIENTATION_TYPE.ORIGINAL) {
+        canvas.width = originalHeight
+        canvas.height = originalWidth
+        canvasImageData = ctx.createImageData(originalHeight, originalWidth)
+      } else {
+        canvas.width = originalWidth
+        canvas.height = originalHeight
+        canvasImageData = ctx.createImageData(originalWidth, originalHeight)
+      }
       canvasImageData.data.set(rotatedImageBytes)
       ctx.putImageData(canvasImageData, 0, 0)
     })

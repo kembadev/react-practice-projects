@@ -6,3 +6,8 @@ export const DIRECTION = {
   LEFT: 'LEFT',
   RIGHT: 'RIGHT'
 }
+
+export const ORIENTATION_TYPE = {
+  ORIGINAL: 'ORIGINAL',
+  TWISTED: 'TWISTED'
+}
