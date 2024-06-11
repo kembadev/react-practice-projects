@@ -10,13 +10,15 @@ export function useImage () {
     e.preventDefault()
     const { imageFile } = Object.fromEntries(new FormData(e.target))
 
+    if (imageFile.length > 1) return setErrorMessage('No se admiten múltiples archivos.')
+
     const fileType = imageFile?.type.split('/')[0]
     let file
 
     if (fileType === undefined) {
-      file = Result.Failed({ error: 'Archivo no encontrado' })
+      file = Result.Failed({ error: 'Archivo no encontrado.' })
     } else if (fileType !== 'image') {
-      file = Result.Failed({ value: imageFile, error: `El archivo debe ser de tipo imagen. Recibido: ${imageFile.type}` })
+      file = Result.Failed({ value: imageFile, error: `El archivo debe ser de tipo imagen. Recibido: ${imageFile.type}.` })
     }
 
     if (fileType === 'image') {
@@ -51,5 +53,5 @@ export function useImage () {
     }
   }, [image])
 
-  return { image, errorMessage, handleSubmit }
+  return { image, setImage, errorMessage, setErrorMessage, handleSubmit }
 }

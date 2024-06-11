@@ -8,6 +8,11 @@ export const DIRECTION = {
 }
 
 export const ORIENTATION_TYPE = {
-  ORIGINAL: 'ORIGINAL',
+  INITIAL: 'INITIAL',
   TWISTED: 'TWISTED'
+}
+
+export const LONGEST_SIDE = {
+  HEIGHT: 'HEIGHT',
+  WIDTH: 'WIDTH'
 }

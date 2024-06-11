@@ -2,30 +2,106 @@
     --radius: 3px;
     --highlightColor: #9980FA;
     --contrastColor: #f5f6fa;
-    --blue: #366aad;
+    --blue: #0a3d62;
+    --boxSpacingBetween: 40px;
+    --colorFirstQuadrant: #67e6dc;
+    --colorSecondQuadrant: #17c0eb;
+    --colorThirdQuadrant: var(--colorFirstQuadrant);
+    --colorFourthQuadrant: var(--colorSecondQuadrant);
+    --backgroundSpinner: conic-gradient(var(--colorFirstQuadrant) 0 0.25turn,
+            var(--colorSecondQuadrant) 0.25turn 0.5turn,
+            var(--colorThirdQuadrant) 0.5turn 0.75turn,
+            var(--colorFourthQuadrant) 0.75turn 1turn);
+}
+
+.description {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+}
+
+.description h1 {
+    font-size: 3em;
+    margin: 0;
+    text-align: center;
 }
 
 .form-imageInput {
+    width: 200px;
+    height: 200px;
+    display: grid;
+    align-items: center;
     text-align: center;
+    padding: 10px;
+    position: relative;
+    background-color: var(--blue);
+    border-radius: 50%;
+}
+
+.form-imageInput div *:is(:not(label)) {
+    pointer-events: none;
+}
+
+.form-imageInput::before {
+    content: "";
+    width: calc(100% + var(--boxSpacingBetween));
+    aspect-ratio: 1;
+    box-sizing: border-box;
+    position: absolute;
+    left: calc(var(--boxSpacingBetween) / 2 * -1);
+    border-radius: 50%;
+    animation: spin 50s linear infinite;
+    background-image: var(--backgroundSpinner);
+    box-shadow: 0 0 5px var(--contrastColor);
+    z-index: -5;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0);
+    }
+
+    to {
+        transform: rotate(1turn);
+    }
+}
+
+.form-imageInput span {
+    width: 100px;
+}
+
+.form-imageInput span svg {
+    width: inherit;
+    aspect-ratio: 1;
+}
+
+.form-imageInput strong {
+    display: block;
+    font-size: 0.95em;
+}
+
+.form-imageInput label {
+    text-decoration-line: underline;
+    font-size: 0.9em;
+    cursor: pointer;
 }
 
 .form-imageInput+p {
     font-size: 1.05em;
-}
-
-.form-imageInput label {
-    display: inline-grid;
-    place-content: center;
-    border: 2px solid #f7f7f7;
-    border-radius: var(--radius);
-    padding: 7px 12px;
-    font-size: 1.35em;
-    font-weight: bold;
-    cursor: pointer;
+    font-style: italic;
+    margin: 0;
 }
 
 main {
-    min-width: 320px;
+    min-height: 100vh;
+    width: 100vw;
+    box-sizing: border-box;
+    padding: 40px;
+}
+
+main,
+.actionsContainer {
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -52,6 +128,12 @@ main button>svg {
     display: grid;
     place-content: center;
     align-items: center;
+    flex: 1;
+}
+
+.actionsContainer {
+    width: 320px;
+    margin-inline: auto auto;
 }
 
 .utilitiesContainer {
@@ -67,7 +149,7 @@ main button>svg {
 
 .mainControls {
     display: grid;
-    grid-template-columns: repeat(3, auto);
+    grid-template-columns: repeat(2, auto);
     place-content: center;
     gap: 12px;
 }
@@ -108,11 +190,36 @@ main button>svg {
     max-height: inherit;
 }
 
-.saveBtn {
+.buttons {
     height: 40px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+
+    & button {
+        border-radius: 0;
+        font-size: 1.3em;
+    }
+
+    & button:first-child {
+        border-radius: var(--radius) 0 0 var(--radius);
+    }
+
+    & button:last-child {
+        border-radius: 0 var(--radius) var(--radius) 0;
+    }
+}
+
+.saveBtn {
     background-color: var(--highlightColor);
     color: var(--contrastColor);
     border: none;
-    border-radius: var(--radius);
-    font-size: 1.3em;
+}
+
+.discardChangesBtn {
+    height: 40px;
+    background-color: color-mix(in srgb, var(--contrastColor) 5%, transparent);
+    border: none;
+    box-shadow: 1px 1px 1px rgb(186, 195, 197);
+    position: relative;
+    top: -1px;
 }

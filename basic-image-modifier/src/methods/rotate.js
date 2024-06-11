@@ -40,7 +40,7 @@ async function getRotatedImageBytes ({ imageBytes, canvasWidth, canvasHeight, di
   return new Uint8Array(rotatedImageBytesMatrix.flat(2))
 }
 
-export function setRotation ({ canvas, ctx, originalWidth, originalHeight, direction, orientationType }) {
+export function setRotation ({ canvas, ctx, initialWidth, initialHeight, direction, orientationType }) {
   getImageBytesFromContext({ ctx, canvasWidth: canvas.width, canvasHeight: canvas.height })
     .then(imageBytes => getRotatedImageBytes({
       imageBytes,
@@ -51,14 +51,14 @@ export function setRotation ({ canvas, ctx, originalWidth, originalHeight, direc
     .then(rotatedImageBytes => {
       // toggle canvas's dimensions due to rotation
       let canvasImageData
-      if (orientationType === ORIENTATION_TYPE.ORIGINAL) {
-        canvas.width = originalHeight
-        canvas.height = originalWidth
-        canvasImageData = ctx.createImageData(originalHeight, originalWidth)
+      if (orientationType === ORIENTATION_TYPE.INITIAL) {
+        canvas.width = initialHeight
+        canvas.height = initialWidth
+        canvasImageData = ctx.createImageData(initialHeight, initialWidth)
       } else {
-        canvas.width = originalWidth
-        canvas.height = originalHeight
-        canvasImageData = ctx.createImageData(originalWidth, originalHeight)
+        canvas.width = initialWidth
+        canvas.height = initialHeight
+        canvasImageData = ctx.createImageData(initialWidth, initialHeight)
       }
       canvasImageData.data.set(rotatedImageBytes)
       ctx.putImageData(canvasImageData, 0, 0)

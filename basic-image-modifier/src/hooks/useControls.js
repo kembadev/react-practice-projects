@@ -4,8 +4,8 @@ import { setInvertion } from '../methods/invert.js'
 import { DIRECTION, ORIENTATION_TYPE } from '../consts.js'
 
 export function useControls ({ canvas, ctx, imageFile, imgElement }) {
-  const [originalDimensions, setOriginalDimensions] = useState({ height: 0, width: 0 })
-  const [canvasOrientation, setCanvasOrientation] = useState(ORIENTATION_TYPE.ORIGINAL)
+  const [canvasInitialDimensions, setCanvasInitialDimensions] = useState({ height: 0, width: 0 })
+  const [canvasOrientation, setCanvasOrientation] = useState(ORIENTATION_TYPE.INITIAL)
 
   const invertImage = () => {
     setInvertion({
@@ -19,14 +19,14 @@ export function useControls ({ canvas, ctx, imageFile, imgElement }) {
     setRotation({
       canvas,
       ctx,
-      originalWidth: originalDimensions.width,
-      originalHeight: originalDimensions.height,
+      initialWidth: canvasInitialDimensions.width,
+      initialHeight: canvasInitialDimensions.height,
       direction,
       orientationType: canvasOrientation
     })
 
     setCanvasOrientation(prevType => (
-      prevType === ORIENTATION_TYPE.ORIGINAL ? ORIENTATION_TYPE.TWISTED : ORIENTATION_TYPE.ORIGINAL
+      prevType === ORIENTATION_TYPE.INITIAL ? ORIENTATION_TYPE.TWISTED : ORIENTATION_TYPE.INITIAL
     ))
   }
 
@@ -38,5 +38,5 @@ export function useControls ({ canvas, ctx, imageFile, imgElement }) {
     updateImageOrientation(DIRECTION.RIGHT)
   }
 
-  return { setOriginalDimensions, invertImage, rotateToLeft, rotateToRight }
+  return { setCanvasInitialDimensions, invertImage, rotateToLeft, rotateToRight, setCanvasOrientation }
 }
