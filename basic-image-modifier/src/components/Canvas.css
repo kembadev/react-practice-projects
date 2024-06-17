@@ -1,0 +1,6 @@
+.canvasContainer {
+  display: grid;
+  place-content: center;
+  align-items: center;
+  flex: 1;
+}

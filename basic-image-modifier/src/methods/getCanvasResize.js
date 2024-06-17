@@ -42,5 +42,5 @@ export async function getCanvasResize ({ imgHeight, imgWidth, parentHeight, pare
     }
   }
 
-  return { finalCanvasHeight, finalCanvasWidth }
+  return { finalCanvasHeight: parseInt(finalCanvasHeight), finalCanvasWidth: parseInt(finalCanvasWidth) }
 }

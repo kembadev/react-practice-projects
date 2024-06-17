@@ -1,0 +1,92 @@
+.actionsContainer {
+  width: 320px;
+  margin-inline: auto auto;
+}
+
+.utilitiesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-radius: 4px;
+}
+
+.utilitiesContainer>* {
+  max-height: 35px;
+}
+
+.mainControls {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  place-content: center;
+  gap: 12px;
+}
+
+.mainControls>* {
+  height: 35px;
+}
+
+.utility-rotate,
+.utility-invert {
+  &>* {
+    height: 100%;
+  }
+}
+
+.utility-rotate {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.utility-rotate>* {
+  aspect-ratio: 1;
+}
+
+.restoreActions {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: space-evenly;
+}
+
+.restoreActions button {
+  max-height: inherit;
+  width: 80px;
+}
+
+.restoreActions button>svg {
+  max-height: inherit;
+}
+
+.save-discard_container {
+  height: 40px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+
+  & button {
+    border-radius: 0;
+    font-size: 1.3em;
+  }
+
+  & button:first-child {
+    border-radius: var(--radius) 0 0 var(--radius);
+  }
+
+  & button:last-child {
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+}
+
+.saveBtn {
+  background-color: var(--highlightColor);
+  color: var(--contrastColor);
+  border: none;
+}
+
+.discardChangesBtn {
+  height: 40px;
+  background-color: color-mix(in srgb, var(--contrastColor) 5%, transparent);
+  border: none;
+  box-shadow: 1px 1px 1px rgb(186, 195, 197);
+  position: relative;
+  top: -1px;
+}

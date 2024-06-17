@@ -1,0 +1,90 @@
+:root {
+  --boxSpacingBetween: 40px;
+  --colorFirstQuadrant: #67e6dc;
+  --colorSecondQuadrant: #17c0eb;
+  --colorThirdQuadrant: var(--colorFirstQuadrant);
+  --colorFourthQuadrant: var(--colorSecondQuadrant);
+  --backgroundSpinner: conic-gradient(var(--colorFirstQuadrant) 0 0.25turn,
+      var(--colorSecondQuadrant) 0.25turn 0.5turn,
+      var(--colorThirdQuadrant) 0.5turn 0.75turn,
+      var(--colorFourthQuadrant) 0.75turn 1turn);
+}
+
+.description {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 60px;
+}
+
+.description h1 {
+  font-size: 3em;
+  margin: 0;
+  text-align: center;
+}
+
+.form-imageInput {
+  width: 200px;
+  height: 200px;
+  display: grid;
+  align-items: center;
+  text-align: center;
+  padding: 10px;
+  position: relative;
+  background-color: var(--blue);
+  border-radius: 50%;
+}
+
+.form-imageInput div *:is(:not(label)) {
+  pointer-events: none;
+}
+
+.form-imageInput::before {
+  content: "";
+  width: calc(100% + var(--boxSpacingBetween));
+  aspect-ratio: 1;
+  box-sizing: border-box;
+  position: absolute;
+  left: calc(var(--boxSpacingBetween) / 2 * -1);
+  border-radius: 50%;
+  animation: spin 50s linear infinite;
+  background-image: var(--backgroundSpinner);
+  box-shadow: 0 0 5px var(--contrastColor);
+  z-index: -5;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+.form-imageInput span {
+  width: 100px;
+}
+
+.form-imageInput span svg {
+  width: inherit;
+  aspect-ratio: 1;
+}
+
+.form-imageInput strong {
+  display: block;
+  font-size: 0.95em;
+}
+
+.form-imageInput label {
+  text-decoration-line: underline;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+.form-imageInput+p {
+  font-size: 1.05em;
+  font-style: italic;
+  margin: 0;
+}

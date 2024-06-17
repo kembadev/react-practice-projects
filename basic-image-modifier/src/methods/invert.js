@@ -1,6 +1,4 @@
-import { getImageBytesFromContext } from './imageBytes.js'
-
-async function getImageBytesXAxisInverted ({ imageBytes, canvasWidth, canvasHeight }) {
+export async function getImageBytesXAxisInverted ({ imageBytes, canvasWidth, canvasHeight }) {
   const imageBytesMatrix = []
   for (let i = 0; i < imageBytes.length; i += (canvasWidth * 4)) {
     const rowOfValues = []
@@ -31,14 +29,4 @@ async function getImageBytesXAxisInverted ({ imageBytes, canvasWidth, canvasHeig
   }
 
   return new Uint8Array(newImageBytes.flat())
-}
-
-export function setInvertion ({ ctx, canvasWidth, canvasHeight }) {
-  getImageBytesFromContext({ ctx, canvasWidth, canvasHeight })
-    .then(imageBytes => getImageBytesXAxisInverted({ imageBytes, canvasWidth, canvasHeight }))
-    .then(invertedImageBytes => {
-      const canvasImageData = ctx.createImageData(canvasWidth, canvasHeight)
-      canvasImageData.data.set(invertedImageBytes)
-      ctx.putImageData(canvasImageData, 0, 0)
-    })
 }
