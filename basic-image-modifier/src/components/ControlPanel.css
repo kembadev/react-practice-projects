@@ -1,5 +1,29 @@
+:root {
+  --borderColor: #dee3f850;
+}
+
+button {
+  display: grid;
+  align-items: center;
+  border: 1px solid var(--borderColor);
+  outline: none;
+  border-radius: var(--radius);
+  background-color: color-mix(in srgb, transparent 80%, var(--highlightColor));
+  color: #dcdde1;
+  padding: 5px;
+  cursor: pointer;
+}
+
+button>svg {
+  width: 100%;
+  height: 100%;
+}
+
 .actionsContainer {
   width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   margin-inline: auto auto;
 }
 
@@ -14,10 +38,38 @@
   max-height: 35px;
 }
 
+.restoreActions {
+  width: 120px;
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: space-evenly;
+
+  button:first-child {
+    border-radius: var(--radius) 0 0 var(--radius);
+  }
+
+  button:last-child {
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+
+  button+button {
+    border-left: 1px solid color-mix(in srgb, var(--textMain) 50%, transparent);
+  }
+}
+
+.restoreActions button {
+  height: 2.2em;
+  border: none;
+}
+
+.restoreActions button>svg {
+  height: 100%;
+}
+
 .mainControls {
-  display: grid;
-  grid-template-columns: repeat(2, auto);
-  place-content: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
   gap: 12px;
 }
 
@@ -25,53 +77,44 @@
   height: 35px;
 }
 
-.utility-rotate,
-.utility-invert {
-  &>* {
-    height: 100%;
+.mainControls,
+.toolSelector {
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--borderColor) transparent;
+}
+
+.toolSelector {
+  border-top: 1px solid var(--borderColor);
+  padding-top: 10px;
+  padding-bottom: 5px;
+
+  ul {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
   }
 }
 
-.utility-rotate {
-  display: flex;
-  flex-direction: row;
-  gap: 5px;
-}
-
-.utility-rotate>* {
-  aspect-ratio: 1;
-}
-
-.restoreActions {
-  display: grid;
-  grid-template-columns: auto auto;
-  justify-content: space-evenly;
-}
-
-.restoreActions button {
-  max-height: inherit;
-  width: 80px;
-}
-
-.restoreActions button>svg {
-  max-height: inherit;
-}
 
 .save-discard_container {
   height: 40px;
   display: grid;
   grid-template-columns: 2fr 1fr;
 
-  & button {
+  button {
     border-radius: 0;
     font-size: 1.3em;
   }
 
-  & button:first-child {
+  button:first-child {
     border-radius: var(--radius) 0 0 var(--radius);
   }
 
-  & button:last-child {
+  button:last-child {
     border-radius: 0 var(--radius) var(--radius) 0;
   }
 }

@@ -6,26 +6,8 @@ main {
   padding: 40px;
 }
 
-main,
-.actionsContainer {
+main {
   display: flex;
   flex-direction: column;
   gap: 10px;
-}
-
-main button {
-  display: grid;
-  align-items: center;
-  border: 1px solid #dcdde1;
-  outline: none;
-  border-radius: var(--radius);
-  background-color: color-mix(in srgb, transparent 86%, var(--highlightColor));
-  color: #dcdde1;
-  padding: 5px;
-  cursor: pointer;
-}
-
-main button>svg {
-  width: 100%;
-  height: 100%;
 }

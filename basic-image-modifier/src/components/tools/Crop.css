@@ -1,0 +1,16 @@
+.rotateControls,
+.invertControl {
+  &>* {
+    height: 100%;
+  }
+}
+
+.rotateControls {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.rotateControls>* {
+  aspect-ratio: 1;
+}

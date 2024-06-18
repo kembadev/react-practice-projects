@@ -1,34 +1,46 @@
 import './ControlPanel.css'
 
-import { RotateLeftIcon, RotateRightIcon, UndoIcon, RedoIcon } from './Icons.jsx'
+import { UndoIcon, RedoIcon } from './Icons.jsx'
+import { Crop } from './tools/Crop.jsx'
 
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useControls } from '../hooks/useControls.js'
 
+const tools = [
+  {
+    name: 'Crop',
+    Component: Crop
+  },
+  {
+    name: 'Effects',
+    Component: () => <button>Sepia</button>
+  },
+  {
+    name: 'MarkUp',
+    Component: () => <button>Text</button>
+  }
+]
+
 export function ControlPanel () {
-  const { logs, invertImage, rotateToLeft, rotateToRight, handleUndo, handleRedo, clearCanvas } = useControls()
+  const [toolSelected, setToolSelected] = useState('Crop')
+  const {
+    logs,
+    handleUndo,
+    handleRedo,
+    clearCanvas
+  } = useControls()
 
   const currentStateIndex = useMemo(() => logs.findIndex(
     ({ isCurrentState }) => Boolean(isCurrentState)
   ), [logs])
 
+  const ToolsComponent = useMemo(() => tools.find(
+    ({ name }) => name === toolSelected
+  ).Component, [toolSelected])
+
   return (
     <header className='actionsContainer'>
       <section className="utilitiesContainer">
-        <article className="mainControls">
-          <div className="utility-rotate">
-            <button title="Rotar a la izquierda" onClick={rotateToLeft}>
-              <RotateLeftIcon />
-            </button>
-            <button title="Rotar a la derecha" onClick={rotateToRight}>
-              <RotateRightIcon />
-            </button>
-          </div>
-          <div className="utility-invert">
-            <button title="Invertir imagen" onClick={invertImage}>Invertir</button>
-          </div>
-        </article>
-
         <article className="restoreActions">
           <button
             title="Deshacer"
@@ -45,6 +57,25 @@ export function ControlPanel () {
             <RedoIcon />
           </button>
         </article>
+
+        <article className="mainControls">
+          <ToolsComponent />
+        </article>
+      </section>
+
+      <section className='toolSelector'>
+        <ul>
+          {
+            tools.map(({ name }) => (
+              <li key={name}>
+                <button
+                  onClick={() => { setToolSelected(name) }}
+                  style={{ backgroundColor: name !== toolSelected && 'transparent', borderRadius: '15px' }}
+                >{name}</button>
+              </li>
+            ))
+          }
+        </ul>
       </section>
 
       <section className='save-discard_container'>
