@@ -3,7 +3,7 @@ import './UploadField.css'
 import { FolderIcon } from './Icons.jsx'
 import { useImageFile } from '../hooks/useImageFile.js'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useCanvas } from '../hooks/useCanvas.js'
 
 import { Result } from '../utils.js'
@@ -12,15 +12,18 @@ export function UploadField () {
   const { errorMessage, setErrorMessage } = useImageFile()
   const { setUserImageFile } = useCanvas()
   const [isOnDragOver, setIsOnDragOver] = useState(false)
+  const form = useRef()
 
-  const handleUploadImage = (e) => {
-    e.target.closest('form').requestSubmit()
+  const handleUploadImage = () => {
+    form.current.requestSubmit()
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
 
     const { imageFile } = Object.fromEntries(new FormData(e.target))
+
+    if (imageFile === undefined) return setErrorMessage('Ocurrió algo inesperado. Inténtalo de nuevo.')
 
     if (imageFile.length > 1) return setErrorMessage('No se admiten múltiples archivos.')
 
@@ -51,24 +54,23 @@ export function UploadField () {
     setIsOnDragOver(false)
 
     const items = e.dataTransfer.items
-    if (items.length > 1) return setErrorMessage('No se admiten múltiples archivos.')
 
     const usableItem = items[0]
-    let file
 
-    if (usableItem.kind === 'string') {
-      file = Result.Failed({ value: items[0], error: 'Los textos no están admitido.' })
-    } else if (usableItem.type.split('/')[0] !== 'image') {
-      file = Result.Failed({ error: `El archivo debe ser de tipo imagen. Recibido: ${usableItem.type}.` })
-    }
+    if (usableItem.kind !== 'file') return setErrorMessage('Sólo se admiten archivos.')
 
-    if (usableItem.type.split('/')[0] === 'image') {
-      file = Result.Successful(usableItem.getAsFile())
-    }
+    const input = form.current.querySelector('input[name="imageFile"]')
 
-    if (file.success) return setUserImageFile(file.value)
+    if (!input) return setErrorMessage('Ocurrió algo inesperado. Inténtalo de nuevo.')
 
-    setErrorMessage(file.error)
+    const file = usableItem.getAsFile()
+
+    const fileList = new DataTransfer()
+    fileList.items.add(file)
+
+    input.files = fileList.files
+
+    form.current.requestSubmit()
   }
 
   const handleOnDragOver = (e) => {
@@ -78,10 +80,11 @@ export function UploadField () {
   }
 
   return (
-    <header className='description'>
+    <header className='uploadContainer'>
       <h1>Editor básico de imágenes</h1>
       <form
         className="form-imageInput"
+        ref={form}
         onSubmit={handleSubmit}
         onDrop={handleDrop}
         onDragOver={handleOnDragOver}
@@ -91,7 +94,7 @@ export function UploadField () {
         style={{
           color: isOnDragOver && '#505756',
           transform: isOnDragOver && 'scale(1.1)',
-          transition: 'all 200ms'
+          transition: isOnDragOver && 'all 200ms'
         }}
       >
         <div>
