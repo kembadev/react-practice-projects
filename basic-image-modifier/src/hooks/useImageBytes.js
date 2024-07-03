@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { ImageBytesContext } from '../context/imageBytes'
+import { ImageBytesContext } from '../context/imageBytes.jsx'
 
 export function useImageBytes () {
   const context = useContext(ImageBytesContext)

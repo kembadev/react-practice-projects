@@ -1,31 +1,18 @@
-import { EVENTS } from '../consts.js'
+// import { EVENTS } from '../consts.js'
 
-import { useState, useEffect } from 'react'
-import { useCanvas } from './useCanvas.js'
+import { useState, /* useEffect,  */useContext } from 'react'
+import { CanvasContext } from '../context/canvas.jsx'
 
 export function useImageFile () {
-  const { userImageFile } = useCanvas()
+  const context = useContext(CanvasContext)
+
+  if (context === undefined) {
+    throw new Error('useImageFile must be within a CanvasProvider')
+  }
+
+  const { userImageFile, setUserImageFile } = context
+
   const [errorMessage, setErrorMessage] = useState(null)
 
-  useEffect(() => {
-    if (!userImageFile) return
-
-    const onLoadImage = () => {
-      const imageLoadEvent = new CustomEvent(EVENTS.IMAGE_LOAD, { detail: imgElement })
-      window.dispatchEvent(imageLoadEvent)
-    }
-
-    const blob = new Blob([userImageFile], { type: userImageFile.type })
-    const url = URL.createObjectURL(blob)
-    const imgElement = document.createElement('img')
-    imgElement.src = url
-
-    imgElement.addEventListener('load', onLoadImage)
-
-    return () => {
-      imgElement.removeEventListener('load', onLoadImage)
-    }
-  }, [userImageFile])
-
-  return { errorMessage, setErrorMessage }
+  return { setUserImageFile, userImageFile, errorMessage, setErrorMessage }
 }

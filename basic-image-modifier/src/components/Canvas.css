@@ -1,6 +1,7 @@
 .canvasContainer {
   display: grid;
   place-content: center;
+  justify-items: center;
   align-items: center;
   flex: 1;
 }

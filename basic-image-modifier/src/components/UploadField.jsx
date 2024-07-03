@@ -1,18 +1,39 @@
 import './UploadField.css'
 
+import { EVENTS } from '../consts.js'
+
 import { FolderIcon } from './Icons.jsx'
 import { useImageFile } from '../hooks/useImageFile.js'
 
-import { useRef, useState } from 'react'
-import { useCanvas } from '../hooks/useCanvas.js'
+import { useRef, useState, useEffect } from 'react'
 
 import { Result } from '../utils.js'
 
 export function UploadField () {
-  const { errorMessage, setErrorMessage } = useImageFile()
-  const { setUserImageFile } = useCanvas()
+  const { userImageFile, setUserImageFile, errorMessage, setErrorMessage } = useImageFile()
   const [isOnDragOver, setIsOnDragOver] = useState(false)
+
   const form = useRef()
+
+  useEffect(() => {
+    if (!userImageFile) return
+
+    const onLoadImage = () => {
+      const imageLoadEvent = new CustomEvent(EVENTS.IMAGE_LOAD, { detail: imgElement })
+      window.dispatchEvent(imageLoadEvent)
+    }
+
+    const blob = new Blob([userImageFile], { type: userImageFile.type })
+    const url = URL.createObjectURL(blob)
+    const imgElement = document.createElement('img')
+    imgElement.src = url
+
+    imgElement.addEventListener('load', onLoadImage)
+
+    return () => {
+      imgElement.removeEventListener('load', onLoadImage)
+    }
+  }, [userImageFile])
 
   const handleUploadImage = () => {
     form.current.requestSubmit()

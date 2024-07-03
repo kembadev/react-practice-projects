@@ -1,21 +1,31 @@
 import './UserView.css'
 
+import { EVENTS } from '../consts.js'
+
+import { LogsProvider } from '../context/logs.jsx'
+import { ToolsProvider } from '../context/tools.jsx'
+
 import { Canvas } from './Canvas.jsx'
 import { UploadField } from './UploadField.jsx'
 import { ControlPanel } from './ControlPanel.jsx'
-
-import { EVENTS } from '../consts.js'
 
 import { useEffect } from 'react'
 import { useImageBytes } from '../hooks/useImageBytes.js'
 import { useCanvas } from '../hooks/useCanvas.js'
 
-import { getCanvasResize } from '../methods/getCanvasResize.js'
-import { getImageBytesFromContext } from '../methods/imageBytes.js'
+import { getImageScaling } from '../methods/getImageScaling.js'
+import { getImageBytesFromContext } from '../methods/getImageBytes.js'
 
 export function UserView () {
   const { updateImageBytes } = useImageBytes()
-  const { canvas, setCtx, userImgElement, setUserImgElement, setCanvasInitialDimensions, setScaling } = useCanvas()
+  const {
+    canvas,
+    canvasContainer,
+    setCurrentCanvasDimensions,
+    setCtx, userImgElement,
+    setUserImgElement,
+    setScaling
+  } = useCanvas()
 
   useEffect(() => {
     const onLoadCanvas = (e) => {
@@ -35,35 +45,35 @@ export function UserView () {
 
     ;(async () => {
       const { height: imgHeight, width: imgWidth } = userImgElement
+      const { offsetHeight: containerHeight, offsetWidth: containerWidth } = canvasContainer.current
+
+      // most optimal dimensions for the canvas
+      const { scaleY, scaleX } = await getImageScaling({
+        originalHeight: imgHeight,
+        originalWidth: imgWidth,
+        containerHeight,
+        containerWidth
+      })
+
+      const canvasWidth = Math.floor(imgWidth * scaleX)
+      const canvasHeight = Math.floor(imgHeight * scaleY)
+
+      canvas.current.height = canvasHeight
+      canvas.current.width = canvasWidth
+      setCurrentCanvasDimensions({ height: canvasHeight, width: canvasWidth })
 
       const context = canvas.current.getContext('2d', { willReadFrequently: true })
       setCtx(context)
 
-      const { offsetHeight: parentHeight, offsetWidth: parentWidth } = canvas.current.parentElement
-
-      // most optimal dimensions for the canvas
-      const { finalCanvasHeight, finalCanvasWidth } = await getCanvasResize({
-        imgHeight,
-        imgWidth,
-        parentHeight,
-        parentWidth
-      })
-
-      canvas.current.height = finalCanvasHeight
-      canvas.current.width = finalCanvasWidth
-
-      setCanvasInitialDimensions({ initialHeight: finalCanvasHeight, initialWidth: finalCanvasWidth })
-
-      const averageImageScaling = ((finalCanvasHeight / imgHeight) + (finalCanvasWidth / imgWidth)) / 2
-      context.scale(averageImageScaling, averageImageScaling)
-      setScaling(averageImageScaling)
+      context.scale(scaleX, scaleY)
+      setScaling({ x: scaleX, y: scaleY })
 
       context.drawImage(userImgElement, 0, 0)
 
       const imageBytes = await getImageBytesFromContext({
         ctx: context,
-        canvasWidth: finalCanvasWidth,
-        canvasHeight: finalCanvasHeight
+        canvasWidth,
+        canvasHeight
       })
 
       updateImageBytes(imageBytes)
@@ -74,8 +84,12 @@ export function UserView () {
     userImgElement
       ? (
           <main>
-            <Canvas />
-            <ControlPanel />
+            <ToolsProvider>
+              <Canvas />
+              <LogsProvider>
+                  <ControlPanel />
+              </LogsProvider>
+            </ToolsProvider>
           </main>
         )
       : (

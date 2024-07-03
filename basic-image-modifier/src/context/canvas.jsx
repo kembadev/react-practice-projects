@@ -1,23 +1,30 @@
-import { createContext, useRef, useState } from 'react'
 import { ORIENTATION_TYPE } from '../consts.js'
+
+import { createContext, useRef, useState } from 'react'
+
+import PropTypes from 'prop-types'
 
 export const CanvasContext = createContext()
 
 export function CanvasProvider ({ children }) {
   const [userImageFile, setUserImageFile] = useState(null)
   const [userImgElement, setUserImgElement] = useState(null)
-  const [canvasInitialDimensions, setCanvasInitialDimensions] = useState({ initialHeight: 0, initialWidth: 0 })
+
+  const [currentCanvasDimensions, setCurrentCanvasDimensions] = useState({ width: 0, height: 0 })
+  const [scaling, setScaling] = useState({ x: 1, y: 1 })
   const [canvasOrientation, setCanvasOrientation] = useState(ORIENTATION_TYPE.INITIAL)
-  const [scaling, setScaling] = useState(1)
+
   const [ctx, setCtx] = useState(null)
+
   const canvas = useRef()
+  const canvasContainer = useRef()
 
   const resetCanvas = () => {
     setUserImageFile(null)
     setUserImgElement(null)
-    setCanvasInitialDimensions({ initialHeight: 0, initialWidth: 0 })
+    setCurrentCanvasDimensions({ width: 0, height: 0 })
     setCanvasOrientation(ORIENTATION_TYPE.INITIAL)
-    setScaling(1)
+    setScaling({ x: 1, y: 1 })
     setCtx(null)
   }
 
@@ -26,21 +33,25 @@ export function CanvasProvider ({ children }) {
       value={{
         resetCanvas,
         canvas,
+        canvasContainer,
         ctx,
         setCtx,
+        scaling,
+        setScaling,
         userImageFile,
         setUserImageFile,
         userImgElement,
         setUserImgElement,
-        canvasInitialDimensions,
-        setCanvasInitialDimensions,
         canvasOrientation,
         setCanvasOrientation,
-        scaling,
-        setScaling
+        currentCanvasDimensions,
+        setCurrentCanvasDimensions
       }}
     >
       {children}
     </CanvasContext.Provider>
   )
+}
+CanvasProvider.propTypes = {
+  children: PropTypes.node
 }

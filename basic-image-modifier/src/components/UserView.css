@@ -3,11 +3,12 @@ main {
   min-height: 100dvh;
   width: 100vw;
   box-sizing: border-box;
-  padding: 40px;
+  padding: 25px;
+  overflow: hidden;
 }
 
 main {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
 }

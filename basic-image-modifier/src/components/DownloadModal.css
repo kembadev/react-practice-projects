@@ -1,0 +1,149 @@
+:root {
+  --primaryColor: #e94560;
+  --fontWeight: 500;
+  --border: 1px solid color-mix(in srgb, transparent 50%, #e3e3e3);
+  --yellow: #fec260
+}
+
+.modal {
+  box-sizing: border-box;
+  background-color: var(--primaryColor);
+  border: none;
+  border-radius: var(--radius);
+  padding: 15px;
+
+  form.config {
+    height: 100%;
+  }
+
+  form.config>div {
+    flex: 1
+  }
+}
+
+.modal::backdrop {
+  background-color: black;
+  opacity: 0.6;
+}
+
+form.config {
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+  color: #eee;
+  font-size: 1.1em;
+}
+
+form.config .inputsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  input {
+    border: none;
+    outline: none;
+    border-radius: var(--radius);
+  }
+}
+
+.scale {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.scale article {
+  display: flex;
+  flex-direction: row;
+  font-size: 1em;
+
+  input {
+    flex: 1
+  }
+
+  span {
+    width: 55px;
+    text-align: center;
+    border: var(--border);
+    border-radius: var(--radius);
+    font-weight: var(--fontWeight);
+  }
+}
+
+.scale p {
+  margin: 0;
+  font-size: 0.9em;
+
+  span {
+    background-color: var(--darkMain);
+    font-size: 1.1em;
+    color: var(--yellow);
+  }
+
+  small {
+    font-size: 0.95em;
+  }
+}
+
+.format-name_container {
+  label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: var(--fontWeight);
+  }
+
+  &>div {
+    display: flex;
+    gap: 5px;
+  }
+
+  &>div input[type="text"] {
+    flex: 1;
+    box-sizing: border-box;
+    width: 100%;
+    font-size: 0.85em;
+    padding: 3px;
+  }
+
+  select {
+    border: none;
+    outline: none;
+    border-radius: var(--radius);
+  }
+}
+
+form.config header {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+
+  button {
+    font-size: 1.35em;
+    display: grid;
+    place-content: center;
+  }
+
+  button:first-child {
+    border-radius: var(--radius) 0 0 var(--radius);
+  }
+
+  button:last-child {
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+}
+
+.download {
+  background-color: var(--yellow);
+  color: var(--darkMain);
+  border: none;
+}
+
+.cancel {
+  background-color: transparent;
+  border: var(--border);
+  border-left: none;
+
+  &>svg {
+    width: 28px;
+    height: 28px
+  }
+}

@@ -7,5 +7,5 @@ export class Result {
 
   static Successful = (value) => new Result(value, true, null)
 
-  static Failed = ({ value = undefined, error }) => new Result(typeof value, false, error)
+  static Failed = ({ value = undefined, error = null } = {}) => new Result(typeof value, false, error)
 }

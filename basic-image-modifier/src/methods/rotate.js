@@ -1,18 +1,8 @@
 import { DIRECTION } from '../consts.js'
+import { getMatrixRepresentionOfQuantaFromFlatTypedArray } from './getOrderedTypedArray.js'
 
 export async function getRotatedImageBytes ({ imageBytes, canvasWidth, canvasHeight, direction }) {
-  const imageBytesMatrix = []
-  // each pixel is represented by four values within the imageBytes array
-  for (let y = 0; y < imageBytes.length; y += (canvasWidth * 4)) {
-    const rowOfValues = [...imageBytes.slice(y, y + canvasWidth * 4)]
-
-    const rowOfPixels = []
-    for (let x = 0; x < rowOfValues.length; x += 4) {
-      rowOfPixels.push(rowOfValues.slice(x, x + 4))
-    }
-
-    imageBytesMatrix.push(rowOfPixels)
-  } // create an ordered array from imageBytes
+  const imageBytesMatrix = await getMatrixRepresentionOfQuantaFromFlatTypedArray({ imageBytes, canvasWidth, offset: 4 })
 
   const rotatedImageBytesMatrix = []
   if (direction === DIRECTION.LEFT) {

@@ -1,6 +1,6 @@
 <div align="center">
 <a href="https://github.com/kembadev/react-practice-projects/blob/main/basic-image-modifier/README.md">
-  <img src="https://i.imgur.com/lm7DBl4.png" width="300px">
+  <img src="https://i.imgur.com/4ipf4gq.png" width="300px">
 </a>
 
 # Photo editor made in React
@@ -19,7 +19,7 @@
 	git clone https://github.com/kembadev/react-practice-projects.git
 	```
 
-2. Go to the directory of the project
+2. Go to project directory
 
 	```sh
 	cd ./basic-image-modifier

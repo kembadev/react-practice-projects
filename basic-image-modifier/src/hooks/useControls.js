@@ -6,49 +6,18 @@ import { useLogs } from './useLogs.js'
 
 import { getRotatedImageBytes } from '../methods/rotate.js'
 import { getImageBytesXAxisInverted } from '../methods/invert.js'
-import { getCurrentCanvasDimensions } from '../methods/getCanvasDimensions.js'
 
 export function useControls () {
-  const { resetCanvas, canvas, canvasInitialDimensions, canvasOrientation, setCanvasOrientation } = useCanvas()
+  const {
+    canvas,
+    currentCanvasDimensions,
+    setCurrentCanvasDimensions,
+    setCanvasOrientation,
+    setScaling,
+    resetCanvas
+  } = useCanvas()
   const { currentImageBytes, updateImageBytes, clearImageBytes } = useImageBytes()
   const { logs, clearLogs, toggleCurrentState } = useLogs()
-
-  const clearCanvas = () => {
-    clearImageBytes()
-    resetCanvas()
-    clearLogs()
-  }
-
-  const invertImage = () => {
-    const { canvasHeight, canvasWidth } = getCurrentCanvasDimensions({ canvasOrientation, canvasInitialDimensions })
-
-    getImageBytesXAxisInverted({ imageBytes: currentImageBytes, canvasHeight, canvasWidth })
-      .then(invertedImageBytes => updateImageBytes(invertedImageBytes))
-  }
-
-  const doRotation = (direction) => {
-    const { canvasHeight, canvasWidth } = getCurrentCanvasDimensions({ canvasOrientation, canvasInitialDimensions })
-
-    getRotatedImageBytes({ imageBytes: currentImageBytes, canvasWidth, canvasHeight, direction })
-      .then(rotatedImageBytes => {
-        canvas.current.width = canvasHeight
-        canvas.current.height = canvasWidth
-
-        updateImageBytes(rotatedImageBytes)
-
-        setCanvasOrientation(prevType => {
-          return prevType === ORIENTATION_TYPE.INITIAL ? ORIENTATION_TYPE.TWISTED : ORIENTATION_TYPE.INITIAL
-        })
-      })
-  }
-
-  const rotateToLeft = () => {
-    doRotation(DIRECTION.LEFT)
-  }
-
-  const rotateToRight = () => {
-    doRotation(DIRECTION.RIGHT)
-  }
 
   const handleLogRestore = (type) => {
     const isUndo = type === LOG_RESTORE.UNDO
@@ -61,11 +30,13 @@ export function useControls () {
 
     const desiredLog = logs[newCurrentStateIndex]
 
+    const { imageBytes, canvasWidth, canvasHeight, orientation, scaling } = desiredLog
+
     toggleCurrentState(newCurrentStateIndex)
-    updateImageBytes(desiredLog.imageBytes)
-    setCanvasOrientation(desiredLog.orientation)
-    canvas.current.width = desiredLog.canvasWidth
-    canvas.current.height = desiredLog.canvasHeight
+    updateImageBytes(imageBytes)
+    setCurrentCanvasDimensions({ width: canvasWidth, height: canvasHeight })
+    setCanvasOrientation(orientation)
+    setScaling(scaling)
   }
 
   const handleUndo = () => {
@@ -76,8 +47,52 @@ export function useControls () {
     handleLogRestore(LOG_RESTORE.REDO)
   }
 
+  const clearCanvas = () => {
+    clearImageBytes()
+    resetCanvas()
+    clearLogs()
+  }
+
+  const invertImage = () => {
+    getImageBytesXAxisInverted({ imageBytes: currentImageBytes, canvasWidth: canvas.current.width })
+      .then(updateImageBytes)
+  }
+
+  const doRotation = async (direction) => {
+    const { width: canvasWidth, height: canvasHeight } = currentCanvasDimensions
+
+    let rotatedImageBytes
+
+    try {
+      rotatedImageBytes = await getRotatedImageBytes({ imageBytes: currentImageBytes, canvasWidth, canvasHeight, direction })
+    } catch (err) {
+      console.error(err)
+      return
+    }
+
+    // canvas.current.width = canvasHeight
+    // canvas.current.height = canvasWidth
+
+    updateImageBytes(rotatedImageBytes)
+
+    setCurrentCanvasDimensions({ width: canvasHeight, height: canvasWidth })
+
+    setCanvasOrientation(
+      prevOrientation => prevOrientation === ORIENTATION_TYPE.INITIAL
+        ? ORIENTATION_TYPE.TWISTED
+        : ORIENTATION_TYPE.INITIAL
+    )
+  }
+
+  const rotateToLeft = () => {
+    doRotation(DIRECTION.LEFT)
+  }
+
+  const rotateToRight = () => {
+    doRotation(DIRECTION.RIGHT)
+  }
+
   return {
-    logs,
     invertImage,
     rotateToLeft,
     rotateToRight,

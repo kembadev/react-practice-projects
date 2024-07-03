@@ -8,5 +8,35 @@ export function useCanvas () {
     throw new Error('useCanvas must be within a CanvasProvider')
   }
 
-  return context
+  const {
+    canvas,
+    canvasContainer,
+    ctx,
+    setCtx,
+    scaling,
+    setScaling,
+    userImgElement,
+    setUserImgElement,
+    canvasOrientation,
+    setCanvasOrientation,
+    currentCanvasDimensions,
+    setCurrentCanvasDimensions,
+    resetCanvas
+  } = context
+
+  return {
+    canvas,
+    canvasContainer,
+    ctx,
+    setCtx,
+    scaling,
+    setScaling,
+    userImgElement,
+    setUserImgElement,
+    canvasOrientation,
+    setCanvasOrientation,
+    currentCanvasDimensions,
+    setCurrentCanvasDimensions,
+    resetCanvas
+  }
 }

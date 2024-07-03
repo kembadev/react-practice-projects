@@ -4,8 +4,7 @@ export const EVENTS = {
 
 export const DIRECTION = {
   LEFT: 'LEFT',
-  RIGHT: 'RIGHT',
-  SAME: 'SAME'
+  RIGHT: 'RIGHT'
 }
 
 export const ORIENTATION_TYPE = {
@@ -21,4 +20,11 @@ export const LONGEST_SIDE = {
 export const LOG_RESTORE = {
   UNDO: 'UNDO',
   REDO: 'REDO'
+}
+
+export const CORNER_POSITION = {
+  TOP: 'TOP',
+  BOTTOM: 'BOTTOM',
+  LEFT: 'LEFT',
+  RIGHT: 'RIGHT'
 }

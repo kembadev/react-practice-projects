@@ -1,6 +1,8 @@
 import { createContext } from 'react'
 import { useImageBytesReducer } from '../hooks/useImageBytesReducer.js'
 
+import PropTypes from 'prop-types'
+
 export const ImageBytesContext = createContext()
 
 export function ImageBytesProvider ({ children }) {
@@ -17,4 +19,8 @@ export function ImageBytesProvider ({ children }) {
       {children}
     </ImageBytesContext.Provider>
   )
+}
+
+ImageBytesProvider.propTypes = {
+  children: PropTypes.node
 }
